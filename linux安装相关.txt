@@ -1,0 +1,82 @@
+
+AlmaLinux 国内镜像源更换方法
+
+(1) 阿里云源
+
+# 配置
+# 注意：“# baseurl” 中间有个空格（AlmaLinux 专有）
+sed -e 's|^mirrorlist=|#mirrorlist=|g' \
+    -e 's|^# baseurl=https://repo.almalinux.org|baseurl=https://mirrors.aliyun.com|g' \
+    -i.bak \
+    /etc/yum.repos.d/almalinux*.repo
+
+# 恢复 (sysin)
+sed -e 's|^#mirrorlist=|mirrorlist=|g' \
+    -e 's|^baseurl=https://mirrors.aliyun.com|# baseurl=https://repo.almalinux.org|g' \
+    -i.bak \
+    /etc/yum.repos.d/almalinux*.repo
+
+
+
+(2) 上海交通大学源（mirror 没有 s）
+
+# 配置
+# 注意：“# baseurl” 中间有个空格（AlmaLinux 专有）
+sed -e 's|^mirrorlist=|#mirrorlist=|g' \
+    -e 's|^# baseurl=https://repo.almalinux.org|baseurl=https://mirror.sjtu.edu.cn|g' \
+    -i.bak \
+    /etc/yum.repos.d/almalinux*.repo
+
+# 恢复 (sysin)
+sed -e 's|^#mirrorlist=|mirrorlist=|g' \
+    -e 's|^baseurl=https://mirror.sjtu.edu.cn|# baseurl=https://repo.almalinux.org|g' \
+    -i.bak \
+    /etc/yum.repos.d/almalinux*.repo
+	
+EPEL 更换国内源
+
+(1) 阿里云源
+
+sed -e 's|^metalink=|#metalink=|g' \
+    -e 's|^#baseurl=https://download.example/pub|baseurl=https://mirrors.aliyun.com|g' \
+    -e 's|^#baseurl=https://download.fedoraproject.org/pub|baseurl=https://mirrors.aliyun.com|g' \
+    -i.bak \
+    /etc/yum.repos.d/epel*.repo
+# 注意 (sysin)：
+# CentOS 8、AlmaLinux 9 与 Rocky Linux 8/9 中 #baseurl=https://download.example/pub
+# 而 AlmaLinux 8 早期版本是：#baseurl=https://download.fedoraproject.org/pub
+# 故增加一句上述地址的替换
+
+
+# 恢复
+sed -e 's|^#metalink=|metalink=|g' \
+    -e 's|^baseurl=https://mirrors.aliyun.com|#baseurl=https://download.example/pub|g' \
+    -i.bak \
+    /etc/yum.repos.d/epel*.repo
+
+(2) 上海交通大学源  
+
+# 注意 (sysin)：上海交通大学地址多一个 fedora
+sed -e 's|^metalink=|#metalink=|g' \
+    -e 's|^#baseurl=https://download.example/pub|baseurl=https://mirror.sjtu.edu.cn/fedora|g' \
+    -e 's|^#baseurl=https://download.fedoraproject.org/pub|baseurl=https://mirror.sjtu.edu.cn/fedora|g' \
+    -i.bak \
+    /etc/yum.repos.d/epel*.repo
+# 注意 (sysin)：
+# CentOS 8、AlmaLinux 9 与 Rocky Linux 8/9 中 #baseurl=https://download.example/pub
+# 而 AlmaLinux 8 早期版本是：#baseurl=https://download.fedoraproject.org/pub
+# 故增加一句上述地址的替换
+
+# 恢复
+sed -e 's|^#metalink=|metalink=|g' \
+    -e 's|^baseurl=https://mirror.sjtu.edu.cn/fedora|#baseurl=https://download.example/pub|g' \
+    -i.bak \
+    /etc/yum.repos.d/epel*.repo
+
+yum update
+
+
+dnf clean all
+dnf makecache
+
+
